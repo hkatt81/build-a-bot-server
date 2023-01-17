@@ -1,7 +1,13 @@
 const path = require('path')
 const express = require("express");
+const history = require('connect-history-api-fallback');
 
 const app = express();
+// Creates api at http://localhost:8081/api/parts
+
+// Use connect-history-api-fallback to solve deep linking
+// ..with html5 history mode for nice urls
+app.use(history({index: '/index.html'}));
 
 app.get('/api/parts', (req, res) =>
   res.send({
@@ -9,7 +15,7 @@ app.get('/api/parts', (req, res) =>
       {
         id: 1,
         description:
-          "A robot head with an unusually large eye and teloscpic neck -- excellent for exploring high spaces.",
+          "A robot head with an unusually large eye and telescopic neck -- excellent for exploring high spaces.",
         title: "Large Cyclops",
         src: "/api/images/head-big-eye.png",
         type: "heads",
@@ -174,6 +180,9 @@ app.post('/api/cart', (req, res) =>
 app.post('/api/sign-in', (req, res) => res.status(200).send());
 
 app.use('/api/images', express.static('images'));
+
+// Serve the vue app
+app.use('/', express.static('dist', {index: 'index.html'}));
 
 app.listen(8081, () => console.log('Server listening on port 8081!'));
 
